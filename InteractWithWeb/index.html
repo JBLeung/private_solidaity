@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star Notary</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
 
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 </head>
@@ -28,11 +28,15 @@
 
 <script>
   /* global window Web3 web3 document location */
-  // Instantiate and set Ganache as your provider
-  window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider) // what Metamask injected
+  } else {
+    // Instantiate and set Ganache as your provider
+    web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+}
   // The default (top) wallet account from a list of test accounts
   web3.eth.defaultAccount = web3.eth.accounts[0]
-
 // The interface definition for your smart contract (the ABI)
 const StarNotary = web3.eth.contract([
     {
@@ -45,12 +49,6 @@ const StarNotary = web3.eth.contract([
       type: 'function',
     },
     {
-      inputs: [],
-      payable: false,
-      stateMutability: 'nonpayable',
-      type: 'constructor',
-    },
-    {
       anonymous: false,
       inputs: [
         {
@@ -61,6 +59,12 @@ const StarNotary = web3.eth.contract([
       ],
       name: 'starClaimed',
       type: 'event',
+    },
+    {
+      inputs: [],
+      payable: false,
+      stateMutability: 'nonpayable',
+      type: 'constructor',
     },
     {
       constant: true,
@@ -92,7 +96,7 @@ const StarNotary = web3.eth.contract([
     },
   ])
 // Grab the contract at specified deployed address with the interface defined by the ABI
-const starNotary = StarNotary.at('0x812684a11ea89e83c7ad5b19a568ae98e77f5574')
+const starNotary = StarNotary.at('0xaeb2dbd2c59061f0267b91c0d8f0cf825f85f9a1')
 
 // Get and display star name
 starNotary.starName((error, result) => {
@@ -102,7 +106,6 @@ starNotary.starName((error, result) => {
       console.log(error)
     }
 })
-
 // Get and display star owner
 starNotary.starOwner((error, result) => {
     if (!error) {
@@ -112,20 +115,29 @@ starNotary.starOwner((error, result) => {
     }
 })
 // Enable claim button being clicked
-  function claimButtonClicked() {
-    starNotary.claimStar((error, result) => {
-      const starClaimedEvent = starNotary.starClaimed()
-      starClaimedEvent.watch((eventError, eventResult) => {
-        if (!eventError) {
-          console.log('starClaimedEvent Success', eventResult)
-          location.reload()
+function claimButtonClicked() {
+    web3.eth.getAccounts((error, accounts) => {
+      if (error) {
+        console.log(error)
+        return
+      }
+      const account = accounts[0]
+      starNotary.claimStar((error, result) => {
+        if (!error) {
+          const starClaimedEvent = starNotary.starClaimed({from: account})
+          starClaimedEvent.watch((eventError, result) => {
+            if (!eventError) {
+              location.reload()
+            } else {
+              console.log('watching for star claimed event is failing', eventError)
+            }
+          })
         } else {
-          console.log('something went wrong in event watching!', eventError)
+          console.log(error)
         }
       })
     })
   }
-  /* global window Web3 web3 */
 </script>
 </body>
 </html>
