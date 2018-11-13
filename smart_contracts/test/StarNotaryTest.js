@@ -7,12 +7,27 @@ contract('StarNotary', (accounts) => {
     this.contract = await StarNotary.new({from: accounts[0]})
   })
 
-  describe('can create a star', () => {
+  describe('createStar', () => {
     it('can create a star and get its name', async function () {
-      await this.contract.createStar('awesome star!', 1, {from: accounts[0]})
 
-      assert.equal(await this.contract.tokenIdToStarInfo(1), 'awesome star!')
+      const name = "Star power 103!"
+      const story = "I love my wonderful star"
+      const cent = "ra_032.155"
+      const dec = "dec_121.874"
+      const mag = "mag_245.978"
+      const starId = 1
+
+      // check star is not exist
+      assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), false)
+
+      // create a star
+      await this.contract.createStar(name, story, cent, dec, mag, starId, {from: accounts[0]})
+      assert.equal(await this.contract.tokenIdToStarInfo(starId), [name, story, cent, dec, mag].toString())
+
+      // check star is exist
+      assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), true)
     })
+
   })
 
   describe('buying and selling stars', () => {
@@ -23,8 +38,14 @@ contract('StarNotary', (accounts) => {
     const starId = 1
     const starPrice = web3.toWei(0.01, 'ether')
 
+    const name = "Star power 103!"
+    const story = "I love my wonderful star"
+    const cent = "ra_032.155"
+    const dec = "dec_121.874"
+    const mag = "mag_245.978"
+
     beforeEach(async function () {
-      await this.contract.createStar('awesome star!', starId, {from: user1})
+      await this.contract.createStar(name, story, cent, dec, mag, starId, {from: user1})
     })
 
     it('user1 can put up their star for sale', async function () {

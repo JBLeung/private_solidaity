@@ -1,41 +1,39 @@
 pragma solidity ^0.4.23;
 
-import "github.com/Arachnid/solidity-stringutils/strings.sol";
 import 'openzeppelin-solidity/contracts/token/ERC721/ERC721.sol';
 
 contract StarNotary is ERC721 {
 
-    using strings for *;
-
     struct Star {
         string name;
         string story;
+        string cent;
         string dec;
         string mag;
-        string cent;
     }
 
     mapping(uint256 => Star) public tokenIdToStarInfo;
-    mapping(string => bool) public starCoordinatorsInfo;
+    mapping(bytes32 => bool) public starHashMap;
     mapping(uint256 => uint256) public starsForSale;
 
-    function getCoordinatorsString(string _dec, string _mag, string _cent) returns (string){
-        return _dec.toSlice().concat(_mag.toSlice()).concat(_cent.toSlice());
+
+    function getCoordinatorsHash(string _cent, string _dec, string _mag) public pure returns (bytes32){
+        return keccak256(abi.encodePacked(_cent, _dec, _mag));
     }
-    function checkIfStarExist(string _dec, string _mag, string _cent) returns (bool){
-        string coordinatorsString = getCoordinatorsString(_dec, _mag, _cent);
-        return starCoordinatorsInfo[_coordinatorsString] == 0;
+    function checkIfStarExist(bytes32 _coordinatorsHash) public view returns (bool){
+        return starHashMap[_coordinatorsHash];
     }
 
-    function createStar(string _name, string _story, string _dec, string _mag, string _cent, uint256 _tokenId) public {
+    function createStar(string _name, string _story, string _cent, string _dec, string _mag, uint256 _tokenId) public {
+
+        bytes32 coordinatorsHash = getCoordinatorsHash(_cent, _dec, _mag);
         // check coordinators uniqueness
-        require(checkIfStarExist(_dec, _mag, _cent));
-
+        require(!checkIfStarExist(coordinatorsHash));
         // init star
-        Star memory newStar = Star(_name, _story, _dec, _mag, _cent);
-
+        Star memory newStar = Star(_name, _story, _cent, _dec, _mag);
+        // save star
         tokenIdToStarInfo[_tokenId] = newStar;
-        starCoordinatorsInfo[_coordinatorsString] = true;
+        starHashMap[coordinatorsHash] = true;
 
         _mint(msg.sender, _tokenId);
     }
