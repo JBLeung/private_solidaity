@@ -10,20 +10,24 @@ contract('StarNotary', (accounts) => {
   describe('createStar', () => {
     it('can create a star and get its name', async function () {
 
+      assert.equal((await this.contract.nextStarIndex()).toNumber(), 1)
       const name = "Star power 103!"
       const story = "I love my wonderful star"
       const cent = "ra_032.155"
       const dec = "dec_121.874"
       const mag = "mag_245.978"
-      const starId = 1
+      const starId = (await this.contract.nextStarIndex()).toNumber()
+
 
       // check star is not exist
       assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), false)
 
       // create a star
-      await this.contract.createStar(name, story, cent, dec, mag, starId, {from: accounts[0]})
-      assert.equal(await this.contract.tokenIdToStarInfo(starId), [name, story, cent, dec, mag].toString())
+      await this.contract.createStar(name, story, cent, dec, mag, {from: accounts[0]})
+      assert.equal(await this.contract.tokenIdToStarInfo(starId), [name, story, cent, dec, mag, true].toString())
 
+      // check star index is auto increment
+      assert.equal((await this.contract.nextStarIndex()).toNumber(), 2)
       // check star is exist
       assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), true)
     })
@@ -33,9 +37,8 @@ contract('StarNotary', (accounts) => {
   describe('buying and selling stars', () => {
     const user1 = accounts[1]
     const user2 = accounts[2]
-    const randomMaliciousUser = accounts[3]
 
-    const starId = 1
+    let starId
     const starPrice = web3.toWei(0.01, 'ether')
 
     const name = "Star power 103!"
@@ -45,7 +48,8 @@ contract('StarNotary', (accounts) => {
     const mag = "mag_245.978"
 
     beforeEach(async function () {
-      await this.contract.createStar(name, story, cent, dec, mag, starId, {from: user1})
+      starId = starId = (await this.contract.nextStarIndex()).toNumber()
+      await this.contract.createStar(name, story, cent, dec, mag, {from: user1})
     })
 
     it('user1 can put up their star for sale', async function () {
