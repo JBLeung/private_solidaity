@@ -149,6 +149,10 @@
                   {
                     "name": "mag",
                     "type": "string"
+                  },
+                  {
+                    "name": "isNotEmpty",
+                    "type": "bool"
                   }
                 ],
                 "payable": false,
@@ -436,6 +440,20 @@
                 "type": "function"
               },
               {
+                "constant": true,
+                "inputs": [],
+                "name": "nextStarIndex",
+                "outputs": [
+                  {
+                    "name": "",
+                    "type": "uint256"
+                  }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+              },
+              {
                 "constant": false,
                 "inputs": [
                   {
@@ -457,10 +475,6 @@
                   {
                     "name": "_mag",
                     "type": "string"
-                  },
-                  {
-                    "name": "_tokenId",
-                    "type": "uint256"
                   }
                 ],
                 "name": "createStar",
