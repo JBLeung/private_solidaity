@@ -9,7 +9,8 @@
   "scripts": {
     "test": "truffle test",
     "build": "truffle complie",
-    "deploy": "truffle deploy --reset --network rinkeby"
+    "deploy": "truffle deploy --reset --network rinkeby",
+    "flattener": "solidity_flattener --solc-paths='openzeppelin-solidity/=$(pwd)/node_modules/openzeppelin-solidity/' ./contracts/StarNotary.sol"
   },
   "keywords": [],
   "author": "",
@@ -19,3 +20,5 @@
     "truffle-hdwallet-provider": "0.0.6"
   }
 }
+
+
