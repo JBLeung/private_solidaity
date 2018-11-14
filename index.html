@@ -36,6 +36,13 @@
                 </div>
                 <button type="submit" id="claim-button" >Claim Star</button>
             </form>
+            <form onsubmit="queryStarButtonClicked(['index']); return false;">
+                <div class="row">
+                    <label class="bold">Star token:</label>
+                    <input type="number" name="index">
+                </div>
+                <button type="submit" id="query-star-button" >Query Star</button>
+            </form>
         </div>
 
         <script>
@@ -43,7 +50,7 @@
           /* global Web3 web3 document location */
 
           const config = {
-            starNotaryContractAddress: '0xA8c7644D75c7f1ebC19F166f30D8035761dd635C',
+            starNotaryContractAddress: '0xcf11c00ca464719591d3297d6a5df26a197d135d',
             contractABI: [
               {
                 "constant": true,
@@ -550,25 +557,33 @@
                 return
               }
               const account = accounts[0]
-              starNotary.createStar(name, story, cont, dec, mag, 1, {from: account},(error, result)=>{
-                if(error) console.log(`Error`, error)
-                console.log(`Result`, result)
-                debugger
+              starNotary.createStar(name, story, cont, dec, mag, {from: account},(error, result)=>{
+                if(error) {
+                  console.log(`Error`, error)
+                }else{
+                    console.log(`Result`, result)
+                  alert(`success claim star`)
+                }
               })
-              // starNotary.claimStar((error, result) => {
-              //   if (!error) {
-              //     const starClaimedEvent = starNotary.starClaimed({from: account})
-              //     starClaimedEvent.watch((eventError, eventResult) => {
-              //       if (!eventError) {
-              //         location.reload() // eslint-disable-line
-              //       } else {
-              //         console.log('watching for star claimed event is failing')
-              //       }
-              //     })
-              //   } else {
-              //     console.log(error)
-              //   }
-              // })
+            })
+          }
+
+          function queryStarButtonClicked(valueKeys) {
+            const {index} = getFormValues(valueKeys)
+            web3.eth.getAccounts((error, accounts) => {
+              if (error) {
+                console.log(error)
+                return
+              }
+              const account = accounts[0]
+              starNotary.tokenIdToStarInfo(index, {from: account},(error, result)=>{
+                if(error) {
+                  console.log(`Error`, error)
+                }else{
+                  console.log(`Query result`, result)
+                  alert(`Query result`, result)
+                }
+              })
             })
           }
         </script>
