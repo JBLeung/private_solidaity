@@ -1,3 +1,19 @@
+#Getting start
+1. npm install
+## command
+### test
+`npm run test`
+### build
+`npm run build`
+### deploy
+`npm run deploy`
+### start http server
+`npm run server`
+### flattener contract
+`npm run flattener`
+
+
+
 #Deploy Smart contract
 #####Contract Address: 
 0xcf11c00ca464719591d3297d6a5df26a197d135d

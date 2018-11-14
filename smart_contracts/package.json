@@ -10,6 +10,7 @@
     "test": "truffle test",
     "build": "truffle complie",
     "deploy": "truffle deploy --reset --network rinkeby",
+    "server": "http-server ./../",
     "flattener": "solidity_flattener --solc-paths='openzeppelin-solidity/=$(pwd)/node_modules/openzeppelin-solidity/' ./contracts/StarNotary.sol"
   },
   "keywords": [],
@@ -18,7 +19,8 @@
   "dependencies": {
     "openzeppelin-solidity": "2.0.0-rc.1",
     "truffle-hdwallet-provider": "0.0.6"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1"
   }
 }
-
-
