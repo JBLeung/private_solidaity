@@ -16,7 +16,7 @@
 
 #Deployed Smart contract
 #####Contract Address: 
-0x378Aae1dDEe7eD79B854f1a6bC2970a64BEc11f1
+0x520D97315c300c2E336548bd6E1116A44F94ED34
 #####Contract Rinkeby EtherScan : 
 https://rinkeby.etherscan.io/address/0xcf11c00ca464719591d3297d6a5df26a197d135d
 #####Transaction ID: 
