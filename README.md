@@ -14,17 +14,17 @@
 
 
 
-#Deployed Smart contract
-#####Contract Address: 
+# Deployed Smart contract
+##### Contract Address: 
 0xad6F6415B8BA017ABd0c25ff4816A5411c6b24D3
-#####Contract Rinkeby EtherScan : 
+##### Contract Rinkeby EtherScan : 
 https://rinkeby.etherscan.io/address/0xad6F6415B8BA017ABd0c25ff4816A5411c6b24D3
-#####Transaction ID: 
+##### Transaction ID: 
 0xb7e8c0ec24d2efe7b01a1044253f3a6b5dd2848ffa923e3da657962afdf6548b
-#####Transaction Rinkeby EtherScan : 
+##### Transaction Rinkeby EtherScan : 
 https://rinkeby.etherscan.io/tx/0xb7e8c0ec24d2efe7b01a1044253f3a6b5dd2848ffa923e3da657962afdf6548b
 
-#Contract ABI API
+# Contract ABI API
 https://api.etherscan.io/api?module=contract&action=getabi&address=0xad6F6415B8BA017ABd0c25ff4816A5411c6b24D3&apikey=9db30a31447f41ea9c7b86d28f34e3bb
 
 
