@@ -557,7 +557,7 @@
                 return
               }
               const account = accounts[0]
-              starNotary.createStar(name, story, cont, dec, mag, {from: account},(error, result)=>{
+              starNotary.createStar(name, story, cont, dec, mag, {from: account, gas: 400000, gasPrice: '20000000000'},(error, result)=>{
                 if(error) {
                   console.log(`Error`, error)
                 }else{
@@ -571,15 +571,19 @@
           function queryStarButtonClicked(valueKeys) {
             const {index} = getFormValues(valueKeys)
             web3.eth.getAccounts((error, accounts) => {
-              if (error) {
+              if(error) {
                 console.log(error)
                 return
               }
               const account = accounts[0]
-              starNotary.tokenIdToStarInfo(index, {from: account},(error, result)=>{
+              starNotary.tokenIdToStarInfo(parseInt(index), {
+                from: account,
+                gas: 400000,
+                gasPrice: '20000000000'
+              }, (error, result) => {
                 if(error) {
                   console.log(`Error`, error)
-                }else{
+                } else {
                   console.log(`Query result`, result)
                   alert(`Query result`, result)
                 }
