@@ -10,7 +10,10 @@
     "test": "truffle test",
     "build": "truffle complie",
     "deploy": "truffle deploy --reset --network rinkeby",
-    "server": "http-server ./../",
+    "server": "http-server",
+    "ganache": "ganache-cli -m 'twelve chief timber prize middle olive shuffle equal ice october guide badge'",
+    "copy_flattener": "truffle-flattener ./contracts/StarNotary.sol | pbcopy",
+    "copy_abi": "node -e \"console.log(require('./build/contracts/StarNotary.json').abi);\" | pbcopy",
     "flattener": "solidity_flattener --solc-paths='openzeppelin-solidity/=$(pwd)/node_modules/openzeppelin-solidity/' ./contracts/StarNotary.sol"
   },
   "keywords": [],
