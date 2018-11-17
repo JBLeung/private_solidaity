@@ -8,30 +8,43 @@ contract('StarNotary', (accounts) => {
   })
 
   describe('createStar', () => {
-    it('can create a star and get its name', async function () {
 
+    const name = "Star power 103!"
+    const story = "I love my wonderful star"
+    const cent = "ra_032.155"
+    const dec = "dec_121.874"
+    const mag = "mag_245.978"
+
+    it('first star index is 1', async function () {
       assert.equal((await this.contract.nextStarIndex()).toNumber(), 1)
-      const name = "Star power 103!"
-      const story = "I love my wonderful star"
-      const cent = "ra_032.155"
-      const dec = "dec_121.874"
-      const mag = "mag_245.978"
-      const starId = (await this.contract.nextStarIndex()).toNumber()
-
-
-      // check star is not exist
-      assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), false)
-
-      // create a star
-      await this.contract.createStar(name, story, cent, dec, mag, {from: accounts[0]})
-      assert.equal(await this.contract.tokenIdToStarInfo(starId), [name, story, cent, dec, mag, true].toString())
-
-      // check star index is auto increment
-      assert.equal((await this.contract.nextStarIndex()).toNumber(), 2)
-      // check star is exist
-      assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), true)
     })
 
+    it('star is not exist', async function () {
+      // check star is not exist
+      assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), false)
+    })
+
+    describe('create a star and check the star', async function () {
+      it('create star', async function () {
+        // create a star
+        const starId = (await this.contract.nextStarIndex()).toNumber()
+        await this.contract.createStar(name, story, cent, dec, mag, {from: accounts[0]})
+        assert.equal(await this.contract.checkIfStarExist(await this.contract.getCoordinatorsHash(cent, dec, mag)), true)
+      })
+      describe('verify the star after create', ()=>{
+        beforeEach(async function() {
+          await this.contract.createStar(name, story, cent, dec, mag, {from: accounts[0]})
+        })
+
+        it('double check star create as expect', async function () {
+          assert.equal(await this.contract.tokenIdToStarInfo((await this.contract.nextStarIndex()).toNumber() - 1), [name, story, cent, dec, mag, true].toString())
+        })
+
+        it('the next star index is auto increment to 2', async function () {
+          assert.equal((await this.contract.nextStarIndex()).toNumber(), 2)
+        })
+      })
+    })
   })
 
   describe('buying and selling stars', () => {
